@@ -1,9 +1,9 @@
 {
 	"id": "dnd-tavern-generator",
 	"name": "Tavern Generator",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "1.5.0",
-	"description": "Generates detailed DnD taverns right into your Obsidian vault.",
+	"description": "Generates detailed DnD taverns right into your vault.",
 	"author": "trikorka",
 	"authorUrl": "https://github.com/trikorka",
 	"isDesktopOnly": false

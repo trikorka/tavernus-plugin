@@ -271,21 +271,21 @@
 
 /* Price Colors */
 .price-zm {
-	color: #e5b567 !important; /* Gold */
+	color: #e5b567; /* Gold */
 	border: 1px solid rgba(229, 181, 103, 0.3);
-	background-color: rgba(229, 181, 103, 0.1) !important;
+	background-color: rgba(229, 181, 103, 0.1);
 }
 
 .price-sm {
-	color: #b3b3b3 !important; /* Silver */
+	color: #b3b3b3; /* Silver */
 	border: 1px solid rgba(179, 179, 179, 0.3);
-	background-color: rgba(179, 179, 179, 0.1) !important;
+	background-color: rgba(179, 179, 179, 0.1);
 }
 
 .price-mm {
-	color: #c47b57 !important; /* Copper/Bronze */
+	color: #c47b57; /* Copper/Bronze */
 	border: 1px solid rgba(196, 123, 87, 0.3);
-	background-color: rgba(196, 123, 87, 0.1) !important;
+	background-color: rgba(196, 123, 87, 0.1);
 }
 
 /* Item Controls (Reroll, Delete) */
@@ -373,7 +373,6 @@
 }
 
 .tavern-tab-btn.is-active {
-	color: var(--text-normal);
 	background: var(--interactive-accent);
 	color: var(--text-on-accent);
 }

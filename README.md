@@ -16,7 +16,7 @@ A plugin for Obsidian that allows you to automatically generate detailed and atm
 4. Click **Install** and then **Enable**.
 
 ### Manual Installation
-1. Download the latest release (`main.js`, `manifest.json`, and `styles.css`) from the [Releases](https://github.com/YOUR_GITHUB_NAME/dnd-tavern-generator/releases) page.
+1. Download the latest release (`main.js`, `manifest.json`, and `styles.css`) from the [Releases](https://github.com/trikorka/tavernus-plugin/releases) page.
 2. Copy these files into your vault's plugin folder: `.obsidian/plugins/dnd-tavern-generator/`.
 3. Reload Obsidian and enable the plugin in the Community Plugins settings.
 
