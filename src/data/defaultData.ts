@@ -1,4 +1,4 @@
-export const DefaultData: Record<string, any> = {
+export const DefaultDataRu: Record<string, any> = {
   "npc_names.json": [
 	"Алариэль", "Браги", "Вигдис", "Горм", "Даенар", "Евпраксия", "Жульен", "Зигма", "Иллитирия", 
 	"Кайрос", "Лираэль", "Малгор", "Никодимус", "Ормунд", "Праксис", "Розалия", "Сигмунд", "Тауриэль",
@@ -187,6 +187,202 @@ export const DefaultData: Record<string, any> = {
 		"Общая комната - 2 ММ\nПростая комната - 5 ММ\nОсобое блюдо - 3 ММ\nОсобый напиток - 1 ММ",
 		"Общая комната - 2 СМ\nПростая комната - 5 СМ\nОсобое блюдо - 2 СМ\nОсобый напиток - 1 СМ",
 		"Общая комната - 2 ЗМ\nПростая комната - 10 ЗМ\nОсобое блюдо - 2 ЗМ\nОсобый напиток - 1 ЗМ"
+	]
+  }
+};
+
+const engAdjectives = ["Forgotten", "Lost", "Wandering", "Dancing", "Slumbering", "Deafening", "Fierce", "Restless", "Sparkling", "Shimmering", "Mysterious", "Cursed", "Blessed", "Scorched", "Frozen", "Winged", "Horned", "Grinning", "Sacred", "Enlightened", "Emerald", "Sapphire", "Ruby", "Bronze", "Iron", "Wooden", "Stone", "Ghostly"];
+const engNouns = ["Manticore", "Gargoyle", "Wyvern", "Chimera", "Hydra", "Siren", "Morrigan", "Mortar", "Lute", "Harp", "Flute", "Musket", "Axe", "Halberd", "Mace", "Pike", "Chainmail", "Gauntlet", "Diadem", "Tiara", "Casket", "Spellbook", "Sphere", "Comet", "Spark", "Grove", "Glade", "Valley", "Tomb", "Citadel", "Shell", "Griffon", "Centaur", "Basilisk", "Beholder", "Mimic", "Lich", "Illithid", "Barbarian", "Paladin", "Priest", "Cleric", "Bard", "Ranger", "Druid", "Monk", "Warlock", "Sorcerer", "Crossbow", "Shield", "Warhammer", "Morningstar", "Helmet", "Breastplate", "Amulet", "Talisman", "Scroll", "Grimoire", "Meteor", "Crystal", "Obelisk", "Castle", "Palace", "Sanctuary", "Haven", "Lair", "Nest", "Estate", "Building", "Structure", "Ring", "Necklace", "Potion", "Elixir", "Curse", "Blessing", "Spell", "Vision", "Prophecy", "Omen", "Apparition", "Miracle", "Glow", "Radiance", "Luminescence", "Revelation"];
+
+export const DefaultDataEn: Record<string, any> = {
+  "npc_names.json": [
+	"Alariel", "Bragi", "Vigdis", "Gorm", "Daenar", "Eupraxia", "Julien", "Sigma", "Illithiria", 
+	"Kairos", "Lyrael", "Malgor", "Nicodemus", "Ormund", "Praxis", "Rosalia", "Sigmund", "Tauriel",
+	"Ulrika", "Fenris", "Hildegard", "Cicero", "Charlotte", "Elmira", "Julian", "Yarven",
+	"Aldric", "Belinda", "Valorian", "Henrietta", "Drogo", "Josephine", "Zephyr", "Isolde",
+	"Xavier", "Lorelei", "Mirabelle", "Nerzul", "Octavia", "Percival", "Ragnar", "Seraphina",
+	"Tobias", "Umberto", "Frederick", "Chloe", "Edward", "Estelle", "Judith", "Jacob",
+	"Amaranth", "Brunhilde", "Valentine", "Godfrey", "Julietta", "Ignatius", "Clementine", "Leopold",
+	"Maximilian", "Ophelia", "Patricia", "Richard", "Stella", "Tristan", "Ursula", "Felix",
+	"Eleonora", "Justus", "Jaromir", "Balthazar", "Victoria", "Herman", "Dorian", "Jeanne", "Siegfried",
+	"Cassandra", "Matilda", "Oliver", "Raphael", "Simon", "Teresa", "Flora", "Eric"
+  ],
+  "tavern_names.json": {
+	"prefixes": ["The", "Ye Olde", "The Prancing", "The Laughing", "The Broken", "The Sleeping", "The Blind", "The Drunken", "The Thirsty", "The Salty", "The Golden", "The Black", "The Red", "The White"],
+	"adjectives_female": engAdjectives,
+	"adjectives_male": engAdjectives,
+	"adjectives_neuter": engAdjectives,
+	"adjectives_plural": engAdjectives,
+	"nouns_female": engNouns,
+	"nouns_male": engNouns,
+	"nouns_neuter": engNouns,
+	"nouns_plural": engNouns
+  },
+  "menu.json": {
+	"cheapFood": [
+		"Boiled turnips", "Baked pumpkin without spices", "River grass in broth", "Hard bran bread",
+		"Boiled fern roots", "Mushroom mush", "Stale pretzel", "Baked chestnuts",
+		"Boar tripe soup", "Turnip broth", "Pea stew", "Fried minnows",
+		"Dough lumps boiled in water", "Wild onion and nettle salad", "Stale hardtack"
+	],
+	"cheapDrinks": [
+		"Herbal decoction", "Diluted birch sap", "Sour berry wine", "Thin oat kissel",
+		"Vinegar water", "Acorn brew", "Burnt barley drink", "Bitter bark infusion",
+		"Warm goat milk", "Apple pomace with water", "Cheap mead", "Intoxicating pine needle brew"
+	],
+	"normalFood": [
+		"Meat pie with onions and carrots", "Pork roast with herbs", "Salmon baked on coals",
+		"Thick stew with bacon", "Deep-fried cheese balls", "Rabbit stewed in sour cream",
+		"Stuffed goose", "Grilled chicken with vegetables", "Mushroom cream soup", "Grilled sausages with cabbage",
+		"Beef stew with beans", "Baked potatoes with cheese", "Fish casserole with dill",
+		"Spicy meatball soup", "Thick pancakes with meat filling"
+	],
+	"normalDrinks": [
+		"Light lager", "Amber ale", "Semi-sweet red wine", "Hot grog with spices",
+		"Apple cider", "Cherry mead", "Ginger tea", "Coffee with cardamom",
+		"Blueberry juice", "Pear punch", "Mint infusion", "Dark velvet beer"
+	],
+	"luxuryFood": [
+		"Venison medallions in lingonberry sauce", "Sterlet stuffed with porcini mushrooms", "Pheasant with truffles",
+		"Fried quails on skewers", "Pork knuckle in honey glaze", "Elven lembas bread",
+		"Asparagus cream soup with crab", "Lobsters in garlic sauce", "Marbled beef tartare",
+		"Chocolate cake with candied violets", "Cheese plate with honey and nuts", "Wild mushroom julienne",
+		"Hare liver pâté with truffle oil", "Shrimp and avocado salad", "Duck breast in orange sauce"
+	],
+	"luxuryDrinks": [
+		"Wine from the Sun Valley vineyards", "Aged dwarven whiskey", "Elven star nectar",
+		"Golden apple champagne", "Rose petal liqueur", "Dragon's Blood (strong spiced wine)",
+		"Moonweed absinthe", "Ambrosia nectar", "Collectible cognac", "Orchid wine",
+		"Glacier's Breath cocktail", "Millennium aged mead"
+	],
+	"chefSpecials": [
+		"Basilisk tail ragout", "Fried kraken tentacles", "Cockatrice egg soup",
+		"Minotaur steak", "Griffon liver in wine", "Mandrake salad",
+		"Gelatinous cube jelly", "Spicy gargoyle wings", "Centaur kebab",
+		"Troll chop (served sizzling)"
+	],
+	"specialDrinks": [
+		"Mermaid's Tear (cocktail)", "Ifrit's Flame (hot shot)", "Invisibility potion (effect fades in a minute)",
+		"Bard's elixir (refreshes the throat)", "Ginseng root tincture", "Banshee's Wail (very strong drink)",
+		"Werewolf saliva (green liqueur)", "Wyvern poison (safe, but burns)", "Shadow's Whisper (dark absinthe)"
+	],
+	"meals_extended": [
+		"Baked iguana", "Bark beetles in batter", "Cave bat soup",
+		"Swamp thing cutlets", "Harpy egg omelet", "Fried spider legs",
+		"Slug ragout", "Candied caterpillars", "Wild warg roast"
+	],
+	"drinks_extended": [
+		"Swamp berry kvass", "Fly agaric tincture", "Poison ivy tea",
+		"Goblin ale (very cloudy)", "Rotten fruit brew", "Pork broth with vodka",
+		"Goblin tears", "Undead bone decoction"
+	]
+  },
+  "atmosphere.json": {
+	"atmospheres": [
+		"The room is lit only by the flickering fireplace; shadows gather in the corners. The quiet rattle of dice can be heard.",
+		"The air is thick with the smell of cheap perfume and spilled wine. Ringing laughter and the clinking of glasses echo around.",
+		"A heavy scent of sweat and unwashed bodies hangs in the air. Patrons scowl suspiciously.",
+		"Bright and spacious. Tables are covered with clean tablecloths. A calm harp melody plays.",
+		"A draft sweeps through the hall, making the candle flames dance. It smells of dampness and old wood.",
+		"A noisy crowd is celebrating a successful campaign. Shouts, songs, and clinking mugs drown out any conversation.",
+		"The aroma of fresh pastry and cinnamon fills the air. The place feels very cozy and safe.",
+		"The tavern is full of mysterious hooded figures. Everyone speaks in whispers.",
+		"It smells of ozone and burnt hair here. Apparently, a magical incident occurred recently.",
+		"Trophies of bizarre creatures hang on the walls. It smells of leather and weapon grease.",
+		"The place resembles a greenhouse - pots with exotic plants are placed everywhere.",
+		"Cages with songbirds hang from the ceiling. Their chirping fills the entire room.",
+		"The air is thick with pipe smoke. Visibility is no more than a few steps.",
+		"The floor is covered with fresh sawdust. It smells of pine and roasted meat.",
+		"The tavern is illuminated by magical glowing mushrooms, emitting a soft bluish light."
+	],
+	"rumors": [
+		"The local lord is gathering a militia; they say the border is restless.",
+		"Last night someone broke into the tomb of the city's founder.",
+		"Iron prices have jumped again. Blacksmiths complain about supply interruptions.",
+		"A giant wolf with glowing eyes was seen in the forest.",
+		"A ship without a crew moored at the port.",
+		"They say a cult of a dark deity has settled in the catacombs under the temple.",
+		"A strange amulet was stolen from an antique dealer.",
+		"Authorities are looking for a group of adventurers for causing a riot in a neighboring village.",
+		"The burgomaster's daughter ran away with a traveling artist.",
+		"An avalanche in the mountains exposed the entrance to ancient ruins.",
+		"The river on the outskirts of the city suddenly turned blood-red.",
+		"A local mage is looking for rare ingredients and promises a generous reward.",
+		"The thieves' guild has a new leader; turf wars are expected.",
+		"Farmers complain that someone is draining the blood from their livestock at night.",
+		"A great storm is approaching; old-timers say there hasn't been one like it in a hundred years."
+	],
+	"patron_quirks": [
+		"Draws the faces of everyone who enters with charcoal in a notebook.",
+		"Constantly recounts a small pouch of copper coins.",
+		"Quietly hums a creepy lullaby.",
+		"Lays out Tarot cards on the table.",
+		"Drinks only water, carefully examining the bottom of the mug.",
+		"Loudly argues with themselves in two different voices.",
+		"Tries to sell dubious amulets to those around.",
+		"Sleeps sitting at the table, hugging their sword.",
+		"Juggles daggers, occasionally dropping them.",
+		"Writes a long letter, wiping away tears every now and then.",
+		"Feeds a tiny pet dragon crumbs from the table.",
+		"Stares intently at one spot without blinking.",
+		"Tries to read a book while holding it upside down.",
+		"Carves wooden figurines with a small knife.",
+		"Drinks from a flask that never seems to run empty."
+	]
+  },
+  "staff_quirks.json": {
+	"races": [
+		"Aasimar", "Firbolg", "Goliath", "Changeling", "Tabaxi", "Kenku", "Triton",
+		"Yuan-ti", "Satyr", "Centaur", "Locathah", "Shifter", "Kobold", "Human", "Elf", "Dwarf", "Tiefling", "Goblin", "Orc"
+	],
+	"quirks": [
+		"Wears an amulet made of teeth from an unknown creature.",
+		"Speaks in riddles and proverbs.",
+		"Has a habit of flipping a coin before answering.",
+		"Has a rune-shaped scar on their face.",
+		"Constantly sniffs the air.",
+		"Hides half of their face under a thick bandage.",
+		"Has heterochromia (different colored eyes).",
+		"Moves absolutely silently.",
+		"Constantly twists a massive signet ring on their finger.",
+		"Stutters when nervous.",
+		"Blinks frequently.",
+		"Laughs with a high, rattling laugh.",
+		"Addresses everyone overly formally.",
+		"Chews on licorice root.",
+		"Wears clothes that are clearly too big for them."
+	]
+  },
+  "locations.json": {
+	"locations": [
+		"Flying Island", "Underground City", "Elven Outpost", "Dwarven Mine",
+		"Pirate Cove", "Abandoned Monastery", "Magic Tower Ruins",
+		"Desert Oasis", "Snowy Pass", "Volcanic Crater",
+		"Tree Village", "Castle on a Cliff", "Cursed Swamps",
+		"Trade Crossroads", "City-State"
+	],
+	"territories": [
+		"Lower tier", "Upper city", "Trade rows", "Artisan quarter",
+		"Slums", "Justice square", "Temple district", "Docks",
+		"Mage quarter", "Non-human ghetto", "Recreation park", "Cemetery",
+		"Guard barracks", "Main gates", "Secret passage"
+	]
+  },
+  "tavern_levels.json": {
+	"quality": ["Cheap Tavern", "Average Tavern", "Luxury Tavern"],
+	"size": [
+		"0 rooms; 1 waitstaff", "2 rooms; 1 waitstaff", "4 rooms; 2 waitstaff",
+		"4 rooms; 3 waitstaff, 1 bouncer", "4 rooms; 4 waitstaff, 2 bouncers",
+		"6 rooms; 4 waitstaff, 2 bouncers", "6 rooms; 5 waitstaff, 2 bouncers",
+		"8 rooms; 5 waitstaff, 2 bouncers", "8 rooms; 6 waitstaff, 2 bouncers",
+		"10 rooms; 7 waitstaff, 2 bouncers", "10 rooms; 7 waitstaff, 4 bouncers",
+		"12 rooms; 8 waitstaff, 6 bouncers", "15 rooms; 10 waitstaff, 8 bouncers",
+		"20 rooms; 15 waitstaff, 10 bouncers"
+	],
+	"prices": [
+		"Common room - 2 CP\nPrivate room - 5 CP\nSpecial dish - 3 CP\nSpecial drink - 1 CP",
+		"Common room - 2 SP\nPrivate room - 5 SP\nSpecial dish - 2 SP\nSpecial drink - 1 SP",
+		"Common room - 2 GP\nPrivate room - 10 GP\nSpecial dish - 2 GP\nSpecial drink - 1 GP"
 	]
   }
 };

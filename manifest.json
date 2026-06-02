@@ -1,7 +1,7 @@
 {
-	"id": "dnd-tavern-generator",
-	"name": "Tavern Generator",
-	"version": "1.0.2",
+	"id": "tavernus",
+	"name": "Tavernus",
+	"version": "1.1.0",
 	"minAppVersion": "1.5.0",
 	"description": "Generates detailed DnD taverns right into your vault.",
 	"author": "trikorka",

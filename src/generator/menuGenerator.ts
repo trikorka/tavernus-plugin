@@ -19,17 +19,18 @@ export interface Menu {
 
 function generateRandomPrice(quality: string, type: "food" | "drink"): string {
 	let amount = 1;
-	let currency = 'ММ';
+	const isEn = quality.includes("Tavern") || quality.includes("Cheap") || quality.includes("Average") || quality.includes("Luxury");
+	let currency = isEn ? 'CP' : 'ММ';
 
-	if (quality === "Скромная таверна") {
+	if (quality === "Скромная таверна" || quality === "Cheap Tavern") {
 		amount = type === "drink" ? 1 : Math.floor(Math.random() * 2) + 1;
-		currency = 'ММ';
-	} else if (quality === "Средняя таверна") {
+		currency = isEn ? 'CP' : 'ММ';
+	} else if (quality === "Средняя таверна" || quality === "Average Tavern") {
 		amount = type === "drink" ? 1 : Math.floor(Math.random() * 3) + 1;
-		currency = 'СМ';
-	} else if (quality === "Богатая таверна") {
+		currency = isEn ? 'SP' : 'СМ';
+	} else if (quality === "Богатая таверна" || quality === "Luxury Tavern") {
 		amount = type === "drink" ? Math.floor(Math.random() * 2) + 1 : Math.floor(Math.random() * 3) + 2;
-		currency = 'ЗМ';
+		currency = isEn ? 'GP' : 'ЗМ';
 	}
 	
 	return `${amount} ${currency}`;

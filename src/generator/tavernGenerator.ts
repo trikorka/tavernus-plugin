@@ -33,7 +33,7 @@ function getRandomElements<T>(arr: T[], count: number): T[] {
 
 export function generateSinglePatron(usedNames?: Record<string, number>): NPC {
 	const { generateNPC } = require('./staffGenerator');
-	const baseNpc = generateNPC("Посетитель", usedNames);
+	const baseNpc = generateNPC("patron", usedNames);
 	const atmosphereData = GlobalDataCache['atmosphere.json'] || {};
 	baseNpc.quirk = getRandomElement(atmosphereData.patron_quirks || []);
 	return baseNpc;
@@ -51,9 +51,9 @@ export function generateSingleRoom(quality: string): Room {
 	const parsedPrices = parsePrices(priceStr);
 
 	const possibleRooms: Omit<Room, 'count'>[] = [];
-	if (parsedPrices.commonRoom) possibleRooms.push({ type: "Общая комната", price: parsedPrices.commonRoom });
-	if (parsedPrices.normalRoom) possibleRooms.push({ type: "Простая комната", price: parsedPrices.normalRoom });
-	if (quality === "Богатая таверна") possibleRooms.push({ type: "Комната для аристократов", price: "15 ЗМ" });
+	if (parsedPrices.commonRoom) possibleRooms.push({ type: "common_room", price: parsedPrices.commonRoom });
+	if (parsedPrices.normalRoom) possibleRooms.push({ type: "normal_room", price: parsedPrices.normalRoom });
+	if (quality === "Богатая таверна" || quality === "Luxury Tavern") possibleRooms.push({ type: "luxury_room", price: "15 ЗМ" }); // The price will be formatted in view or we can leave it as 15 GP/ЗМ
 	
 	const selected = possibleRooms[Math.floor(Math.random() * possibleRooms.length)];
 	return { ...selected, count: 1 };
@@ -65,10 +65,10 @@ export function parsePrices(priceStr: string) {
 		.replace(/серебрян[а-я]*/gi, 'СМ')
 		.replace(/золот[а-я]*/gi, 'ЗМ');
 
-	const commonRoom = formatted.match(/Общая комната\s*-\s*([^,\n]+)/i)?.[1] || "";
-	const normalRoom = formatted.match(/Простая комната\s*-\s*([^,\n]+)/i)?.[1] || "";
-	const specialDish = formatted.match(/Особое блюдо\s*-\s*([^,\n]+)/i)?.[1] || "";
-	const specialDrink = formatted.match(/Особый напиток\s*-\s*([^,\n]+)/i)?.[1] || "";
+	const commonRoom = formatted.match(/(?:Общая комната|Common room)\s*-\s*([^,\n]+)/i)?.[1] || "";
+	const normalRoom = formatted.match(/(?:Простая комната|Private room)\s*-\s*([^,\n]+)/i)?.[1] || "";
+	const specialDish = formatted.match(/(?:Особое блюдо|Special dish)\s*-\s*([^,\n]+)/i)?.[1] || "";
+	const specialDrink = formatted.match(/(?:Особый напиток|Special drink)\s*-\s*([^,\n]+)/i)?.[1] || "";
 	return { commonRoom, normalRoom, specialDish, specialDrink };
 }
 
@@ -101,18 +101,23 @@ export function generateTavern(preferredLocation?: string, preferredQuality?: st
 	}
 	
 	const rooms: Room[] = [];
-	const roomMatch = size.match(/(\d+)\+?\s*комнат[аы]?/i);
+	const roomMatch = size.match(/(\d+)\+?\s*(комнат[аы]?|rooms?)/i);
 	const totalRooms = roomMatch ? parseInt(roomMatch[1], 10) : 0;
 
+	const isEn = priceStr.includes("GP") || priceStr.includes("CP") || priceStr.includes("SP") || priceStr.includes("Common room");
+	const defCommon = isEn ? "2 CP" : "2 ММ";
+	const defNormal = isEn ? "5 SP" : "5 СМ";
+	const defLuxury = isEn ? "15 GP" : "15 ЗМ";
+
 	const availableTypes: Room[] = [];
-	availableTypes.push({ type: "Общая комната", price: parsedPrices.commonRoom || "2 ММ", count: 0 });
-	availableTypes.push({ type: "Простая комната", price: parsedPrices.normalRoom || "5 СМ", count: 0 });
-	availableTypes.push({ type: "Комната для аристократов", price: "15 ЗМ", count: 0 });
+	availableTypes.push({ type: "common_room", price: parsedPrices.commonRoom || defCommon, count: 0 });
+	availableTypes.push({ type: "normal_room", price: parsedPrices.normalRoom || defNormal, count: 0 });
+	availableTypes.push({ type: "luxury_room", price: defLuxury, count: 0 });
 
 	if (totalRooms > 0 && availableTypes.length > 0) {
 		// Filter only valid types for random distribution
 		const validTypesForRandom = availableTypes.filter(t => {
-			if (t.type === "Комната для аристократов" && quality !== "Богатая таверна") return false;
+			if (t.type === "luxury_room" && quality !== "Богатая таверна" && quality !== "Luxury Tavern") return false;
 			return true;
 		});
 		

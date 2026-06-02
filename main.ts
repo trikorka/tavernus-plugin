@@ -1,12 +1,12 @@
-import { Plugin, WorkspaceLeaf, TFile } from 'obsidian';
-import { TavernGeneratorView, TAVERN_VIEW_TYPE } from './src/view';
-import { TavernGeneratorSettings, DEFAULT_SETTINGS, TavernGeneratorSettingTab } from './src/settings';
-import { DefaultData } from './src/data/defaultData';
+import { Plugin, WorkspaceLeaf, TFile, TFolder } from 'obsidian';
+import { TavernusView, TAVERN_VIEW_TYPE } from './src/view';
+import { TavernusSettings, DEFAULT_SETTINGS, TavernusSettingTab } from './src/settings';
+import { t } from './src/locales';
 
 export let GlobalDataCache: Record<string, any> = {};
 
-export default class TavernGeneratorPlugin extends Plugin {
-	settings: TavernGeneratorSettings;
+export default class TavernusPlugin extends Plugin {
+	settings: TavernusSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -14,7 +14,8 @@ export default class TavernGeneratorPlugin extends Plugin {
 
 		this.registerEvent(
 			this.app.vault.on('modify', async (file) => {
-				if (file instanceof TFile && file.path.startsWith(this.settings.dataFolderPath + '/')) {
+				const langPath = this.settings.dataFolderPath + '/' + this.settings.language + '/';
+				if (file instanceof TFile && file.path.startsWith(langPath)) {
 					await this.reloadFileCache(file);
 				}
 			})
@@ -22,22 +23,22 @@ export default class TavernGeneratorPlugin extends Plugin {
 
 		this.registerView(
 			TAVERN_VIEW_TYPE,
-			(leaf) => new TavernGeneratorView(leaf, this)
+			(leaf) => new TavernusView(leaf, this)
 		);
 
-		this.addRibbonIcon('beer', 'Открыть генератор таверн', () => {
+		this.addRibbonIcon('beer', t('open_generator', this.settings.language || 'ru'), () => {
 			this.activateView();
 		});
 
 		this.addCommand({
-			id: 'open-tavern-generator',
-			name: 'Открыть боковую панель',
+			id: 'open-tavernus',
+			name: t('open_sidebar', this.settings.language || 'ru'),
 			callback: () => {
 				this.activateView();
 			}
 		});
 
-		this.addSettingTab(new TavernGeneratorSettingTab(this.app, this));
+		this.addSettingTab(new TavernusSettingTab(this.app, this));
 	}
 
 	async onunload() {
@@ -53,14 +54,44 @@ export default class TavernGeneratorPlugin extends Plugin {
 	}
 
 	async initDataFolder() {
-		const folderPath = this.settings.dataFolderPath;
-		let folder = this.app.vault.getAbstractFileByPath(folderPath);
-		if (!folder) {
-			await this.app.vault.createFolder(folderPath);
+		const baseFolderPath = this.settings.dataFolderPath;
+		const langFolderPath = `${baseFolderPath}/${this.settings.language}`;
+		
+		let baseFolder = this.app.vault.getAbstractFileByPath(baseFolderPath);
+		if (!baseFolder) {
+			await this.app.vault.createFolder(baseFolderPath);
+			baseFolder = this.app.vault.getAbstractFileByPath(baseFolderPath);
 		}
 
-		for (const [filename, content] of Object.entries(DefaultData)) {
-			const filePath = `${folderPath}/${filename}`;
+		// Migration: move old JSON files from base to 'ru' folder
+		const ruFolderPath = `${baseFolderPath}/ru`;
+		let ruFolder = this.app.vault.getAbstractFileByPath(ruFolderPath);
+		if (!ruFolder) {
+			await this.app.vault.createFolder(ruFolderPath);
+			ruFolder = this.app.vault.getAbstractFileByPath(ruFolderPath);
+			
+			if (baseFolder instanceof TFolder) {
+				for (const child of baseFolder.children) {
+					if (child instanceof TFile && child.extension === 'json') {
+						await this.app.fileManager.renameFile(child, `${ruFolderPath}/${child.name}`);
+					}
+				}
+			}
+		}
+
+		let langFolder = this.app.vault.getAbstractFileByPath(langFolderPath);
+		if (!langFolder) {
+			await this.app.vault.createFolder(langFolderPath);
+		}
+
+		const dataFile = require('./src/data/defaultData');
+		const dataToLoad = this.settings.language === 'en' ? dataFile.DefaultDataEn : dataFile.DefaultDataRu;
+
+		// Очищаем кэш перед загрузкой новых данных
+		GlobalDataCache = {};
+
+		for (const [filename, content] of Object.entries(dataToLoad)) {
+			const filePath = `${langFolderPath}/${filename}`;
 			const file = this.app.vault.getAbstractFileByPath(filePath);
 			if (!file) {
 				const jsonStr = JSON.stringify(content, null, 2);
@@ -76,9 +107,9 @@ export default class TavernGeneratorPlugin extends Plugin {
 		try {
 			const content = await this.app.vault.read(file);
 			GlobalDataCache[file.name] = JSON.parse(content);
-			console.log(`[Tavern Generator] Reloaded data from ${file.name}`);
+			console.log(`[Tavernus] Reloaded data from ${file.name}`);
 		} catch (e) {
-			console.error(`[Tavern Generator] Error parsing JSON in ${file.name}:`, e);
+			console.error(`[Tavernus] Error parsing JSON in ${file.name}:`, e);
 		}
 	}
 

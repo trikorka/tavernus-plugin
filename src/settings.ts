@@ -1,34 +1,52 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import TavernGeneratorPlugin from '../main';
+import TavernusPlugin from '../main';
+import { t } from './locales';
 
-export interface TavernGeneratorSettings {
+export interface TavernusSettings {
 	saveFolderPath: string;
 	defaultTags: string;
 	dataFolderPath: string;
+	language: string;
 }
 
-export const DEFAULT_SETTINGS: TavernGeneratorSettings = {
+export const DEFAULT_SETTINGS: TavernusSettings = {
 	saveFolderPath: '',
 	defaultTags: '#tavern, #dnd',
-	dataFolderPath: 'TavernData'
+	dataFolderPath: 'TavernData',
+	language: 'ru'
 }
 
-export class TavernGeneratorSettingTab extends PluginSettingTab {
-	plugin: TavernGeneratorPlugin;
+export class TavernusSettingTab extends PluginSettingTab {
+	plugin: TavernusPlugin;
 
-	constructor(app: App, plugin: TavernGeneratorPlugin) {
+	constructor(app: App, plugin: TavernusPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
 
 	display(): void {
 		const {containerEl} = this;
+		const lang = this.plugin.settings.language;
 
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName('Папка для сохранения')
-			.setDesc('Укажите путь к папке (относительно корня хранилища), куда будут сохраняться сгенерированные таверны. Например: Campaigns/Taverns. Оставьте пустым для сохранения в корень.')
+			.setName(t('settings_language', lang))
+			.setDesc(t('settings_language_desc', lang))
+			.addDropdown(dropdown => dropdown
+				.addOption('ru', 'Русский (Russian)')
+				.addOption('en', 'English')
+				.setValue(this.plugin.settings.language)
+				.onChange(async (value) => {
+					this.plugin.settings.language = value;
+					await this.plugin.saveSettings();
+					await this.plugin.initDataFolder();
+					this.display();
+				}));
+
+		new Setting(containerEl)
+			.setName(t('settings_save_folder', lang))
+			.setDesc(t('settings_save_folder_desc', lang))
 			.addText(text => text
 				.setPlaceholder('Taverns')
 				.setValue(this.plugin.settings.saveFolderPath)
@@ -38,8 +56,8 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 				}));
 
 		new Setting(containerEl)
-			.setName('Теги по умолчанию')
-			.setDesc('Укажите теги (через запятую), которые будут автоматически добавляться в конец заметки.')
+			.setName(t('settings_default_tags', lang))
+			.setDesc(t('settings_default_tags_desc', lang))
 			.addText(text => text
 				.setPlaceholder('#tavern, #dnd')
 				.setValue(this.plugin.settings.defaultTags)
@@ -49,22 +67,21 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 				}));
 
 		new Setting(containerEl)
-			.setName('Папка данных (Словари)')
-			.setDesc('Папка в вашем хранилище, откуда плагин будет читать JSON-словари (имена, еда, слухи). Если папки нет, плагин создаст её с базовыми файлами.')
+			.setName(t('settings_data_folder', lang))
+			.setDesc(t('settings_data_folder_desc', lang))
 			.addText(text => text
 				.setPlaceholder('TavernData')
 				.setValue(this.plugin.settings.dataFolderPath)
 				.onChange(async (value) => {
 					this.plugin.settings.dataFolderPath = value.trim() || 'TavernData';
 					await this.plugin.saveSettings();
-					// Trigger reload of data
 					await this.plugin.initDataFolder();
-					this.display(); // Re-render to show new data
+					this.display();
 				}));
 
-		containerEl.createEl('h3', { text: 'Редактор словарей', cls: 'tavern-section-title' });
+		containerEl.createEl('h3', { text: t('settings_dict_editor', lang), cls: 'tavern-section-title' });
 		containerEl.createEl('p', { 
-			text: 'Здесь вы можете отредактировать все словари плагина. Каждая строчка — это один элемент. Изменения сохраняются автоматически при снятии фокуса с текстового поля.',
+			text: t('settings_dict_editor_desc', lang),
 			cls: 'setting-item-description'
 		});
 
@@ -72,14 +89,15 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 	}
 
 	private renderTabs(containerEl: HTMLElement) {
+		const lang = this.plugin.settings.language;
 		const tabs = [
-			{ id: 'tab-menu-food', title: '🍗 Еда' },
-			{ id: 'tab-menu-drinks', title: '🍺 Напитки' },
-			{ id: 'tab-staff', title: '👤 Персонал' },
-			{ id: 'tab-locations', title: '🗺️ Локации' },
-			{ id: 'tab-atmosphere', title: '🎭 Атмосфера' },
-			{ id: 'tab-names', title: '📜 Названия' },
-			{ id: 'tab-levels', title: '⚙️ Таверны' }
+			{ id: 'tab-menu-food', title: t('settings_tab_food', lang) },
+			{ id: 'tab-menu-drinks', title: t('settings_tab_drinks', lang) },
+			{ id: 'tab-staff', title: t('settings_tab_staff', lang) },
+			{ id: 'tab-locations', title: t('settings_tab_locations', lang) },
+			{ id: 'tab-atmosphere', title: t('settings_tab_atmosphere', lang) },
+			{ id: 'tab-names', title: t('settings_tab_names', lang) },
+			{ id: 'tab-levels', title: t('settings_tab_levels', lang) }
 		];
 
 		const tabsContainer = containerEl.createDiv({ cls: 'tavern-settings-tabs' });
@@ -116,6 +134,7 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 	}
 
 	private renderTabContents(tabContents: HTMLElement[]) {
+		const lang = this.plugin.settings.language;
 		const getTab = (id: string) => tabContents.find(c => c.id === id);
 
 		const getArray = (filename: string, jsonKey: string | null) => {
@@ -148,8 +167,8 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 			renderTags();
 
 			const addForm = parent.createDiv({ cls: 'tavern-add-tag-form' });
-			const input = addForm.createEl('input', { type: 'text', placeholder: 'Новое значение...' });
-			const btn = addForm.createEl('button', { text: 'Добавить' });
+			const input = addForm.createEl('input', { type: 'text', placeholder: t('placeholder_new_value', lang) });
+			const btn = addForm.createEl('button', { text: t('btn_add', lang) });
 			
 			const onAdd = async () => {
 				const val = input.value.trim();
@@ -217,11 +236,11 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 						
 						let inputPrice: HTMLInputElement | null = null;
 						if (hasPriceInput) {
-							inputPrice = form.createEl('input', { type: 'text', value: displayPrice, placeholder: 'Цена (необяз.)' });
+							inputPrice = form.createEl('input', { type: 'text', value: displayPrice, placeholder: t('placeholder_price', lang) });
 							inputPrice.style.flex = "1";
 						}
 						
-						const saveBtn = form.createEl('button', { text: 'Сохранить' });
+						const saveBtn = form.createEl('button', { text: t('btn_save', lang) });
 						
 						const onSave = async () => {
 							const valName = inputName.value.trim();
@@ -247,16 +266,16 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 			renderList();
 
 			const addForm = parent.createDiv({ cls: 'tavern-add-item-form' });
-			const inputName = addForm.createEl('input', { type: 'text', placeholder: hasPriceInput ? 'Название блюда/напитка...' : 'Новая запись...' });
+			const inputName = addForm.createEl('input', { type: 'text', placeholder: hasPriceInput ? t('placeholder_dish_drink', lang) : t('placeholder_new_record', lang) });
 			inputName.style.flex = "2";
 			
 			let inputPrice: HTMLInputElement | null = null;
 			if (hasPriceInput) {
-				inputPrice = addForm.createEl('input', { type: 'text', placeholder: 'Цена (напр. 5 ЗМ)' });
+				inputPrice = addForm.createEl('input', { type: 'text', placeholder: t('placeholder_price', lang) });
 				inputPrice.style.flex = "1";
 			}
 			
-			const btn = addForm.createEl('button', { text: 'Добавить' });
+			const btn = addForm.createEl('button', { text: t('btn_add', lang) });
 			
 			const onAdd = async () => {
 				const valName = inputName.value.trim();
@@ -280,66 +299,66 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 		// 1. Еда (menu.json) - Длинные списки
 		const foodTab = getTab('tab-menu-food');
 		if (foodTab) {
-			renderItemList(foodTab, 'Дешевая еда', 'menu.json', 'cheapFood', true);
-			renderItemList(foodTab, 'Обычная еда', 'menu.json', 'normalFood', true);
-			renderItemList(foodTab, 'Роскошная еда', 'menu.json', 'luxuryFood', true);
-			renderItemList(foodTab, 'Блюда от шефа', 'menu.json', 'chefSpecials', true);
-			renderItemList(foodTab, 'Дополнительная еда', 'menu.json', 'meals_extended', true);
+			renderItemList(foodTab, t('dict_cheap_food', lang), 'menu.json', 'cheapFood', true);
+			renderItemList(foodTab, t('dict_normal_food', lang), 'menu.json', 'normalFood', true);
+			renderItemList(foodTab, t('dict_luxury_food', lang), 'menu.json', 'luxuryFood', true);
+			renderItemList(foodTab, t('dict_chef_food', lang), 'menu.json', 'chefSpecials', true);
+			renderItemList(foodTab, t('dict_ext_food', lang), 'menu.json', 'meals_extended', true);
 		}
 
 		// 2. Напитки (menu.json) - Длинные списки
 		const drinksTab = getTab('tab-menu-drinks');
 		if (drinksTab) {
-			renderItemList(drinksTab, 'Дешевые напитки', 'menu.json', 'cheapDrinks', true);
-			renderItemList(drinksTab, 'Обычные напитки', 'menu.json', 'normalDrinks', true);
-			renderItemList(drinksTab, 'Роскошные напитки', 'menu.json', 'luxuryDrinks', true);
-			renderItemList(drinksTab, 'Фирменные напитки', 'menu.json', 'specialDrinks', true);
-			renderItemList(drinksTab, 'Дополнительные напитки', 'menu.json', 'drinks_extended', true);
+			renderItemList(drinksTab, t('dict_cheap_drinks', lang), 'menu.json', 'cheapDrinks', true);
+			renderItemList(drinksTab, t('dict_normal_drinks', lang), 'menu.json', 'normalDrinks', true);
+			renderItemList(drinksTab, t('dict_luxury_drinks', lang), 'menu.json', 'luxuryDrinks', true);
+			renderItemList(drinksTab, t('dict_special_drinks', lang), 'menu.json', 'specialDrinks', true);
+			renderItemList(drinksTab, t('dict_ext_drinks', lang), 'menu.json', 'drinks_extended', true);
 		}
 
 		// 3. Персонал и Посетители - Короткие (Теги) и Длинные
 		const staffTab = getTab('tab-staff');
 		if (staffTab) {
-			renderTagList(staffTab, 'Имена NPC', 'npc_names.json', null);
-			renderTagList(staffTab, 'Расы', 'staff_quirks.json', 'races');
-			renderItemList(staffTab, 'Особенности персонала', 'staff_quirks.json', 'quirks');
-			renderItemList(staffTab, 'Особенности посетителей', 'atmosphere.json', 'patron_quirks');
+			renderTagList(staffTab, t('dict_npc_names', lang), 'npc_names.json', null);
+			renderTagList(staffTab, t('dict_races', lang), 'staff_quirks.json', 'races');
+			renderItemList(staffTab, t('dict_staff_quirks', lang), 'staff_quirks.json', 'quirks');
+			renderItemList(staffTab, t('dict_patron_quirks', lang), 'atmosphere.json', 'patron_quirks');
 		}
 
 		// 4. Локации - Списки
 		const locTab = getTab('tab-locations');
 		if (locTab) {
-			renderItemList(locTab, 'Глобальные регионы', 'locations.json', 'locations');
-			renderItemList(locTab, 'Местные территории (внутри города)', 'locations.json', 'territories');
+			renderItemList(locTab, t('dict_global_loc', lang), 'locations.json', 'locations');
+			renderItemList(locTab, t('dict_local_loc', lang), 'locations.json', 'territories');
 		}
 
 		// 5. Атмосфера - Списки
 		const atmTab = getTab('tab-atmosphere');
 		if (atmTab) {
-			renderItemList(atmTab, 'Описания атмосферы зала', 'atmosphere.json', 'atmospheres');
-			renderItemList(atmTab, 'Слухи в таверне', 'atmosphere.json', 'rumors');
+			renderItemList(atmTab, t('dict_atmospheres', lang), 'atmosphere.json', 'atmospheres');
+			renderItemList(atmTab, t('dict_rumors', lang), 'atmosphere.json', 'rumors');
 		}
 
 		// 6. Названия (tavern_names.json) - Короткие (Теги)
 		const namesTab = getTab('tab-names');
 		if (namesTab) {
-			renderTagList(namesTab, 'Приставки', 'tavern_names.json', 'prefixes');
-			renderTagList(namesTab, 'Прилагательные (Женские)', 'tavern_names.json', 'adjectives_female');
-			renderTagList(namesTab, 'Прилагательные (Мужские)', 'tavern_names.json', 'adjectives_male');
-			renderTagList(namesTab, 'Прилагательные (Средний)', 'tavern_names.json', 'adjectives_neuter');
-			renderTagList(namesTab, 'Прилагательные (Множ.)', 'tavern_names.json', 'adjectives_plural');
-			renderTagList(namesTab, 'Существительные (Женские)', 'tavern_names.json', 'nouns_female');
-			renderTagList(namesTab, 'Существительные (Мужские)', 'tavern_names.json', 'nouns_male');
-			renderTagList(namesTab, 'Существительные (Средний)', 'tavern_names.json', 'nouns_neuter');
-			renderTagList(namesTab, 'Существительные (Множ.)', 'tavern_names.json', 'nouns_plural');
+			renderTagList(namesTab, t('dict_prefixes', lang), 'tavern_names.json', 'prefixes');
+			renderTagList(namesTab, t('dict_adj_f', lang), 'tavern_names.json', 'adjectives_female');
+			renderTagList(namesTab, t('dict_adj_m', lang), 'tavern_names.json', 'adjectives_male');
+			renderTagList(namesTab, t('dict_adj_n', lang), 'tavern_names.json', 'adjectives_neuter');
+			renderTagList(namesTab, t('dict_adj_p', lang), 'tavern_names.json', 'adjectives_plural');
+			renderTagList(namesTab, t('dict_noun_f', lang), 'tavern_names.json', 'nouns_female');
+			renderTagList(namesTab, t('dict_noun_m', lang), 'tavern_names.json', 'nouns_male');
+			renderTagList(namesTab, t('dict_noun_n', lang), 'tavern_names.json', 'nouns_neuter');
+			renderTagList(namesTab, t('dict_noun_p', lang), 'tavern_names.json', 'nouns_plural');
 		}
 
 		// 7. Таверны (tavern_levels.json) - Короткие/Списки
 		const levelsTab = getTab('tab-levels');
 		if (levelsTab) {
-			renderTagList(levelsTab, 'Уровни качества (Дешевый, Обычный, Роскошный)', 'tavern_levels.json', 'quality');
-			renderItemList(levelsTab, 'Размеры (X комнат; Y прислуг)', 'tavern_levels.json', 'size');
-			renderItemList(levelsTab, 'Цены (Общий зал - X; Обычная - Y...)', 'tavern_levels.json', 'prices');
+			renderTagList(levelsTab, t('dict_quality', lang), 'tavern_levels.json', 'quality');
+			renderItemList(levelsTab, t('dict_sizes', lang), 'tavern_levels.json', 'size');
+			renderItemList(levelsTab, t('dict_prices', lang), 'tavern_levels.json', 'prices');
 		}
 	}
 
@@ -356,7 +375,7 @@ export class TavernGeneratorSettingTab extends PluginSettingTab {
 		}
 
 		// Сохраняем в файл
-		const folderPath = this.plugin.settings.dataFolderPath;
+		const folderPath = `${this.plugin.settings.dataFolderPath}/${this.plugin.settings.language}`;
 		const filePath = `${folderPath}/${filename}`;
 		const file = this.app.vault.getAbstractFileByPath(filePath);
 		
