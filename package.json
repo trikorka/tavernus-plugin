@@ -1,6 +1,6 @@
 {
 	"name": "dnd-tavern-generator",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "DnD Tavern Generator for Obsidian",
 	"main": "main.js",
 	"scripts": {

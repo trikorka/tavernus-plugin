@@ -51,9 +51,9 @@ export function generateSingleRoom(quality: string): Room {
 	const parsedPrices = parsePrices(priceStr);
 
 	const possibleRooms: Omit<Room, 'count'>[] = [];
-	if (parsedPrices.commonRoom) possibleRooms.push({ type: "Место в общем зале", price: parsedPrices.commonRoom });
-	if (parsedPrices.normalRoom) possibleRooms.push({ type: "Обычная комната", price: parsedPrices.normalRoom });
-	if (quality === "Роскошный") possibleRooms.push({ type: "Роскошные апартаменты", price: "15 ЗМ" });
+	if (parsedPrices.commonRoom) possibleRooms.push({ type: "Общая комната", price: parsedPrices.commonRoom });
+	if (parsedPrices.normalRoom) possibleRooms.push({ type: "Простая комната", price: parsedPrices.normalRoom });
+	if (quality === "Богатая таверна") possibleRooms.push({ type: "Комната для аристократов", price: "15 ЗМ" });
 	
 	const selected = possibleRooms[Math.floor(Math.random() * possibleRooms.length)];
 	return { ...selected, count: 1 };
@@ -65,8 +65,8 @@ export function parsePrices(priceStr: string) {
 		.replace(/серебрян[а-я]*/gi, 'СМ')
 		.replace(/золот[а-я]*/gi, 'ЗМ');
 
-	const commonRoom = formatted.match(/Общий Зал\s*-\s*([^,\n]+)/i)?.[1] || "";
-	const normalRoom = formatted.match(/Обычная комната\s*-\s*([^,\n]+)/i)?.[1] || "";
+	const commonRoom = formatted.match(/Общая комната\s*-\s*([^,\n]+)/i)?.[1] || "";
+	const normalRoom = formatted.match(/Простая комната\s*-\s*([^,\n]+)/i)?.[1] || "";
 	const specialDish = formatted.match(/Особое блюдо\s*-\s*([^,\n]+)/i)?.[1] || "";
 	const specialDrink = formatted.match(/Особый напиток\s*-\s*([^,\n]+)/i)?.[1] || "";
 	return { commonRoom, normalRoom, specialDish, specialDrink };
@@ -84,8 +84,8 @@ export function generateTavern(preferredLocation?: string, preferredQuality?: st
 		qualityIndex = Math.floor(Math.random() * levelsData.quality.length);
 	}
 
-	const quality = levelsData.quality[qualityIndex] || "Обычный";
-	const size = getRandomElement(levelsData.size) || "4 комнаты; 2 прислуги";
+	const quality = levelsData.quality[qualityIndex] || "Средняя таверна";
+	const size = getRandomElement(levelsData.size) || "4 комнаты; 2 обслуживающего персонала";
 	
 	const priceStr = levelsData.prices[qualityIndex] || levelsData.prices[0] || "";
 	const parsedPrices = parsePrices(priceStr);
@@ -105,14 +105,14 @@ export function generateTavern(preferredLocation?: string, preferredQuality?: st
 	const totalRooms = roomMatch ? parseInt(roomMatch[1], 10) : 0;
 
 	const availableTypes: Room[] = [];
-	availableTypes.push({ type: "Место в общем зале", price: parsedPrices.commonRoom || "2 ММ", count: 0 });
-	availableTypes.push({ type: "Обычная комната", price: parsedPrices.normalRoom || "5 СМ", count: 0 });
-	availableTypes.push({ type: "Роскошные апартаменты", price: "15 ЗМ", count: 0 });
+	availableTypes.push({ type: "Общая комната", price: parsedPrices.commonRoom || "2 ММ", count: 0 });
+	availableTypes.push({ type: "Простая комната", price: parsedPrices.normalRoom || "5 СМ", count: 0 });
+	availableTypes.push({ type: "Комната для аристократов", price: "15 ЗМ", count: 0 });
 
 	if (totalRooms > 0 && availableTypes.length > 0) {
 		// Filter only valid types for random distribution
 		const validTypesForRandom = availableTypes.filter(t => {
-			if (t.type === "Роскошные апартаменты" && quality !== "Роскошный") return false;
+			if (t.type === "Комната для аристократов" && quality !== "Богатая таверна") return false;
 			return true;
 		});
 		

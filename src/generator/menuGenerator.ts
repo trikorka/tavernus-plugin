@@ -21,13 +21,13 @@ function generateRandomPrice(quality: string, type: "food" | "drink"): string {
 	let amount = 1;
 	let currency = 'ММ';
 
-	if (quality === "Дешевый") {
+	if (quality === "Скромная таверна") {
 		amount = type === "drink" ? 1 : Math.floor(Math.random() * 2) + 1;
 		currency = 'ММ';
-	} else if (quality === "Обычный") {
+	} else if (quality === "Средняя таверна") {
 		amount = type === "drink" ? 1 : Math.floor(Math.random() * 3) + 1;
 		currency = 'СМ';
-	} else if (quality === "Роскошный") {
+	} else if (quality === "Богатая таверна") {
 		amount = type === "drink" ? Math.floor(Math.random() * 2) + 1 : Math.floor(Math.random() * 3) + 2;
 		currency = 'ЗМ';
 	}

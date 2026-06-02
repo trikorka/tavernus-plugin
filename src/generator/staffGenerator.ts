@@ -42,19 +42,19 @@ export function generateStaff(sizeString: string, usedNames?: Record<string, num
 	staff.push(generateNPC("Хозяин / Бармен", usedNames));
 	
 	// Parse servants
-	const servantsMatch = sizeString.match(/(\d+)\+?\s+прислуг[аи]?/i);
+	const servantsMatch = sizeString.match(/(\d+)\+?\s+обслуживающ[а-я\s]+/i);
 	const servantsCount = servantsMatch ? parseInt(servantsMatch[1]) : 0;
 
 	// Parse bouncers
-	const bouncersMatch = sizeString.match(/(\d+)\+?\s+вышибал[аи]?/i);
+	const bouncersMatch = sizeString.match(/(\d+)\+?\s+охран[а-я]+/i);
 	const bouncersCount = bouncersMatch ? parseInt(bouncersMatch[1]) : 0;
 
 	for (let i = 0; i < servantsCount; i++) {
-		staff.push(generateNPC("Прислуга", usedNames));
+		staff.push(generateNPC("Обслуживающий персонал", usedNames));
 	}
 
 	for (let i = 0; i < bouncersCount; i++) {
-		staff.push(generateNPC("Вышибала", usedNames));
+		staff.push(generateNPC("Охрана", usedNames));
 	}
 
 	return staff;

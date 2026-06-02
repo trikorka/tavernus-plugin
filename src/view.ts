@@ -91,12 +91,12 @@ export class TavernGeneratorView extends ItemView {
 
 		const quality = tavern.level.split(" (")[0];
 		const roomsCount = tavern.rooms.reduce((acc, r) => acc + (r.count ?? 1), 0);
-		const servantsCount = tavern.staff.filter(s => s.role === "Прислуга").length;
-		const bouncersCount = tavern.staff.filter(s => s.role === "Вышибала").length;
+		const servantsCount = tavern.staff.filter(s => s.role === "Обслуживающий персонал").length;
+		const bouncersCount = tavern.staff.filter(s => s.role === "Охрана").length;
 
 		let roomsStr = roomsCount === 0 ? "без комнат" : roomsCount === 1 ? "1 комната" : (roomsCount >= 2 && roomsCount <= 4) ? `${roomsCount} комнаты` : `${roomsCount} комнат`;
-		let servantsStr = servantsCount === 0 ? "нет прислуги" : servantsCount === 1 ? "1 прислуга" : (servantsCount >= 2 && servantsCount <= 4) ? `${servantsCount} прислуги` : `${servantsCount} прислуг`;
-		let bouncersStr = bouncersCount === 0 ? "" : bouncersCount === 1 ? ", 1 вышибала" : (bouncersCount >= 2 && bouncersCount <= 4) ? `, ${bouncersCount} вышибалы` : `, ${bouncersCount} вышибал`;
+		let servantsStr = servantsCount === 0 ? "нет обслуж. персонала" : servantsCount === 1 ? "1 из обслуж. персонала" : (servantsCount >= 2 && servantsCount <= 4) ? `${servantsCount} из обслуж. персонала` : `${servantsCount} из обслуж. персонала`;
+		let bouncersStr = bouncersCount === 0 ? "" : bouncersCount === 1 ? ", 1 охранник" : (bouncersCount >= 2 && bouncersCount <= 4) ? `, ${bouncersCount} охранника` : `, ${bouncersCount} охранников`;
 		
 		tavern.level = `${quality} (${roomsStr}; ${servantsStr}${bouncersStr})`;
 
@@ -273,8 +273,8 @@ export class TavernGeneratorView extends ItemView {
 		staffSection.createDiv({ text: "Персонал", cls: "tavern-section-title" });
 		
 		const hosts = tavern.staff.filter(npc => npc.role === "Хозяин / Бармен");
-		const servants = tavern.staff.filter(npc => npc.role === "Прислуга");
-		const bouncers = tavern.staff.filter(npc => npc.role === "Вышибала");
+		const servants = tavern.staff.filter(npc => npc.role === "Обслуживающий персонал");
+		const bouncers = tavern.staff.filter(npc => npc.role === "Охрана");
 
 		if (hosts.length > 0) {
 			hosts.forEach((npc, index) => {
@@ -299,12 +299,12 @@ export class TavernGeneratorView extends ItemView {
 		const staffColumns = staffSection.createDiv({ cls: "menu-columns" });
 		
 		const servantsColumn = staffColumns.createDiv({ cls: "menu-column" });
-		servantsColumn.createDiv({ text: "Прислуга", cls: "menu-column-title" });
+		servantsColumn.createDiv({ text: "Обслуживающий персонал", cls: "menu-column-title" });
 		servants.forEach(npc => {
 			const globalIndex = tavern.staff.indexOf(npc);
 			renderItemWithControls(
 				servantsColumn, `${npc.name} (${npc.race})`, npc.quirk, null,
-				() => { tavern.staff[globalIndex] = generateNPC("Прислуга"); },
+				() => { tavern.staff[globalIndex] = generateNPC("Обслуживающий персонал"); },
 				() => { tavern.staff.splice(globalIndex, 1); },
 				(newVal) => {
 					const match = newVal.match(/(.*)\s+\((.*)\)/);
@@ -318,17 +318,17 @@ export class TavernGeneratorView extends ItemView {
 				(newVal) => { tavern.staff[globalIndex].quirk = newVal; }
 			);
 		});
-		renderAddButton(servantsColumn, "Добавить прислугу", () => {
-			tavern.staff.push(generateNPC("Прислуга"));
+		renderAddButton(servantsColumn, "Добавить персонал", () => {
+			tavern.staff.push(generateNPC("Обслуживающий персонал"));
 		});
 
 		const bouncersColumn = staffColumns.createDiv({ cls: "menu-column" });
-		bouncersColumn.createDiv({ text: "Вышибалы", cls: "menu-column-title" });
+		bouncersColumn.createDiv({ text: "Охрана", cls: "menu-column-title" });
 		bouncers.forEach(npc => {
 			const globalIndex = tavern.staff.indexOf(npc);
 			renderItemWithControls(
 				bouncersColumn, `${npc.name} (${npc.race})`, npc.quirk, null,
-				() => { tavern.staff[globalIndex] = generateNPC("Вышибала"); },
+				() => { tavern.staff[globalIndex] = generateNPC("Охрана"); },
 				() => { tavern.staff.splice(globalIndex, 1); },
 				(newVal) => {
 					const match = newVal.match(/(.*)\s+\((.*)\)/);
@@ -430,8 +430,8 @@ export class TavernGeneratorView extends ItemView {
 		const tavern = this.currentTavern;
 
 		const hosts = tavern.staff.filter(npc => npc.role === "Хозяин / Бармен");
-		const servants = tavern.staff.filter(npc => npc.role === "Прислуга");
-		const bouncers = tavern.staff.filter(npc => npc.role === "Вышибала");
+		const servants = tavern.staff.filter(npc => npc.role === "Обслуживающий персонал");
+		const bouncers = tavern.staff.filter(npc => npc.role === "Охрана");
 
 		const content = `# ${tavern.name}
 **Уровень обслуживания:** ${tavern.level}
@@ -449,7 +449,7 @@ ${tavern.rooms.map(r => `- ${r.count}x ${r.type} — ${r.price}`).join('\n')}
 ## Персонал
 ${hosts.map(npc => `- **${npc.role}:** ${npc.name} (${npc.race}) — *${npc.quirk}*`).join('\n')}
 
-| Прислуга | Вышибалы |
+| Обслуживающий персонал | Охрана |
 | :--- | :--- |
 ${Array.from({ length: Math.max(servants.length, bouncers.length) }).map((_, i) => {
 	const s = servants[i] ? `${servants[i].name} (${servants[i].race}) — *${servants[i].quirk}*` : "";
