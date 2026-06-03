@@ -1,6 +1,5 @@
 # Tavernus
 
-## Description
 Tavernus is an Obsidian plugin that automatically generates detailed and atmospheric Dungeons & Dragons (DnD) taverns directly into your vault. Designed for Game Masters and storytellers, it instantly populates your world with unique establishments, complete with rumors, menus, patrons, and available rooms.
 
 ## Features
