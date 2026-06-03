@@ -274,7 +274,6 @@ export class TavernusView extends ItemView {
 		});
 
 		// Rooms
-		const qualityLevel = tavern.level.split(' ')[0];
 		const roomsSection = card.createDiv({ cls: "tavern-section" });
 		roomsSection.createDiv({ text: t("section_rooms_prices", lang), cls: "tavern-section-title" });
 		
@@ -373,7 +372,7 @@ export class TavernusView extends ItemView {
 			const parts = f.split(" — ");
 			renderItemWithControls(
 				foodColumn, parts[0], null, parts[1] || null,
-				() => { tavern.menu.food[index] = generateSingleFood(qualityLevel); },
+				() => { tavern.menu.food[index] = generateSingleFood(quality); },
 				() => { tavern.menu.food.splice(index, 1); },
 				(newVal) => { tavern.menu.food[index] = `${newVal} — ${parts[1] || ""}`; },
 				undefined,
@@ -381,7 +380,7 @@ export class TavernusView extends ItemView {
 			);
 		});
 		renderAddButton(foodColumn, t("btn_add_dish", lang), () => {
-			tavern.menu.food.push(generateSingleFood(qualityLevel));
+			tavern.menu.food.push(generateSingleFood(quality));
 		});
 
 		const drinksColumn = menuColumns.createDiv({ cls: "menu-column" });
@@ -390,7 +389,7 @@ export class TavernusView extends ItemView {
 			const parts = d.split(" — ");
 			renderItemWithControls(
 				drinksColumn, parts[0], null, parts[1] || null,
-				() => { tavern.menu.drinks[index] = generateSingleDrink(qualityLevel); },
+				() => { tavern.menu.drinks[index] = generateSingleDrink(quality); },
 				() => { tavern.menu.drinks.splice(index, 1); },
 				(newVal) => { tavern.menu.drinks[index] = `${newVal} — ${parts[1] || ""}`; },
 				undefined,
@@ -398,7 +397,7 @@ export class TavernusView extends ItemView {
 			);
 		});
 		renderAddButton(drinksColumn, t("btn_add_drink", lang), () => {
-			tavern.menu.drinks.push(generateSingleDrink(qualityLevel));
+			tavern.menu.drinks.push(generateSingleDrink(quality));
 		});
 
 		const specialsSection = card.createDiv({ cls: "tavern-section", attr: { style: "margin-top: 15px;" } });
@@ -407,7 +406,7 @@ export class TavernusView extends ItemView {
 		const chefParts = tavern.menu.chefSpecial.split(" — ");
 		renderItemWithControls(
 			specialsSection, t("item_chef_special", lang), chefParts[0], chefParts[1] || null,
-			() => { tavern.menu.chefSpecial = generateSingleFood(qualityLevel); },
+			() => { tavern.menu.chefSpecial = generateSingleFood(quality); },
 			null, // no delete for special
 			undefined,
 			(newVal) => { tavern.menu.chefSpecial = `${newVal} — ${chefParts[1] || ""}`; },
@@ -417,7 +416,7 @@ export class TavernusView extends ItemView {
 		const drinkParts = tavern.menu.specialDrink.split(" — ");
 		renderItemWithControls(
 			specialsSection, t("item_special_drink", lang), drinkParts[0], drinkParts[1] || null,
-			() => { tavern.menu.specialDrink = generateSingleDrink(qualityLevel); },
+			() => { tavern.menu.specialDrink = generateSingleDrink(quality); },
 			null,
 			undefined,
 			(newVal) => { tavern.menu.specialDrink = `${newVal} — ${drinkParts[1] || ""}`; },
