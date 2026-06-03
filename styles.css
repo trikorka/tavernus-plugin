@@ -20,10 +20,12 @@
 	display: flex;
 	gap: 10px;
 	margin-bottom: 10px;
+	flex-wrap: wrap;
 }
 
 .tavern-controls select {
 	flex: 1;
+	min-width: 110px;
 	border-radius: 6px;
 	border: 1px solid var(--background-modifier-border);
 }
