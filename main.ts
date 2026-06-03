@@ -10,7 +10,13 @@ export default class TavernusPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
-		await this.initDataFolder();
+		this.app.workspace.onLayoutReady(async () => {
+			try {
+				await this.initDataFolder();
+			} catch (e) {
+				console.error("[Tavernus] Error initializing data folder:", e);
+			}
+		});
 
 		this.registerEvent(
 			this.app.vault.on('modify', async (file) => {
